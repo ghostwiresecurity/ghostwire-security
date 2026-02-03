@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Portal | Ghostwire Security</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">Ghostwire Security</a>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="about.html" class="nav-link">About</a></li>
+                <li><a href="services.html" class="nav-link">Services</a></li>
+                <li><a href="client-portal.html" class="nav-link">Client Portal</a></li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="hero-section">
+        <div class="content-section">
+            <h1>Client Portal</h1>
+            
+            <p>Access all your Ghostwire Security resources and services in one place.</p>
+
+            <div class="portal-grid">
+                <!-- Schedule Consultation -->
+                <div class="portal-card">
+                    <div class="portal-icon">📅</div>
+                    <h3>Schedule Consultation</h3>
+                    <p>Book a free security assessment or consultation call.</p>
+                    <a href="#" class="portal-button" id="schedule-link">Schedule Now →</a>
+                </div>
+
+                <!-- Client Dashboard -->
+                <div class="portal-card">
+                    <div class="portal-icon">📊</div>
+                    <h3>Client Dashboard</h3>
+                    <p>Access your security reports, assessments, and documentation.</p>
+                    <a href="#" class="portal-button" id="dashboard-link">Access Dashboard →</a>
+                </div>
+
+                <!-- Training Portal -->
+                <div class="portal-card">
+                    <div class="portal-icon">🎓</div>
+                    <h3>Security Training</h3>
+                    <p>Access cybersecurity training materials and courses.</p>
+                    <a href="#" class="portal-button" id="training-link">Start Learning →</a>
+                </div>
+
+                <!-- Support Tickets -->
+                <div class="portal-card">
+                    <div class="portal-icon">🎫</div>
+                    <h3>Support Tickets</h3>
+                    <p>Submit and track support requests and incidents.</p>
+                    <a href="#" class="portal-button" id="support-link">Get Support →</a>
+                </div>
+
+                <!-- Knowledge Base -->
+                <div class="portal-card">
+                    <div class="portal-icon">📚</div>
+                    <h3>Knowledge Base</h3>
+                    <p>Browse security guides, tips, and best practices.</p>
+                    <a href="#" class="portal-button" id="kb-link">Browse Articles →</a>
+                </div>
+
+                <!-- Billing Portal -->
+                <div class="portal-card">
+                    <div class="portal-icon">💳</div>
+                    <h3>Billing & Invoices</h3>
+                    <p>Manage your subscription and view invoices.</p>
+                    <a href="#" class="portal-button" id="billing-link">Manage Billing →</a>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem; padding: 2rem; background: #f9f9f9; border-radius: 8px;">
+                <h2>Quick Links</h2>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin-bottom: 1rem;">
+                        <strong>Emergency Support:</strong> 
+                        <a href="tel:+1234567890" style="color: #e74c3c; font-weight: 600;">Call (123) 456-7890</a>
+                    </li>
+                    <li style="margin-bottom: 1rem;">
+                        <strong>Email Support:</strong> 
+                        <a href="mailto:support@ghostwiresecurity.com" style="color: #4a90e2;">support@ghostwiresecurity.com</a>
+                    </li>
+                    <li>
+                        <strong>Response Time:</strong> Within 2 hours for active clients
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <img src="images/logo.png" alt="Ghostwire Security Logo" class="footer-logo">
+            <p>Ghostwire Security</p>
+            <p>&copy; 2025. Ghostwire Security LLC. - All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Simple script to handle external links -->
+    <script>
+        // Configure your SaaS product URLs here
+        const saasLinks = {
+            schedule: 'https://calendly.com/your-username',           // Calendly for scheduling
+            dashboard: 'https://app.yourdashboard.com/login',         // Client dashboard
+            training: 'https://your-training-platform.com',            // Training platform
+            support: 'https://your-helpdesk.com/new-ticket',          // Support system
+            kb: 'https://help.ghostwiresecurity.com',                  // Knowledge base
+            billing: 'https://billing.stripe.com/p/login/xxxxx'        // Stripe billing portal
+        };
+
+        // Update links when page loads
+        document.getElementById('schedule-link').href = saasLinks.schedule;
+        document.getElementById('dashboard-link').href = saasLinks.dashboard;
+        document.getElementById('training-link').href = saasLinks.training;
+        document.getElementById('support-link').href = saasLinks.support;
+        document.getElementById('kb-link').href = saasLinks.kb;
+        document.getElementById('billing-link').href = saasLinks.billing;
+    </script>
+</body>
+</html>

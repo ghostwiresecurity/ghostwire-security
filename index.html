@@ -3,62 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Effective Cybersecurity Solutions | Ghostwire Security</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Ghostwire Security | Cybersecurity Solutions for SOCs & SMBs</title>
+    <meta name="description" content="AI-powered cybersecurity tools built by SOC analysts, for SOC analysts. Reduce alert fatigue, automate compliance, and protect your infrastructure.">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="index.html" class="nav-logo">Ghostwire Security</a>
-            <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link">Home</a></li>
-                <li><a href="about.html" class="nav-link">About</a></li>
-                <li><a href="services.html" class="nav-link">Services</a></li>
-                 <li><a href="products.html" class="nav-link">Products</a></li>
-                <li><a href="client-portal.html" class="nav-link">Client Portal</a></li>
-                <li><a href="contact.html" class="nav-link">Contact</a></li>
-            </ul>
+    <nav class="nav">
+        <div class="container">
+            <div class="nav-content">
+                <a href="index.html" class="logo">GHOSTWIRE SECURITY</a>
+                <div class="nav-links">
+                    <a href="#products">Products</a>
+                    <a href="about.html">About</a>
+                    <a href="contact.html" class="btn-nav">Schedule Demo</a>
+                </div>
+            </div>
         </div>
     </nav>
 
-    <main class="hero-section">
-        <h1>Quick Links</h1>
-        
-        <div class="card-container">
-            <div class="card">
-                <div class="card-image">
-                    <img src="images/ceo-photo.jpg" alt="Meet the CEO">
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Stop Drowning in Security Alerts</h1>
+                <p class="hero-subtitle">AI-powered tools built by SOC analysts to cut alert triage time by 60%, automate compliance reporting, and eliminate false positives.</p>
+                <div class="hero-cta">
+                    <a href="contact.html" class="btn-primary">Schedule a 15-Minute Demo</a>
+                    <a href="#products" class="btn-secondary">View Products</a>
                 </div>
-                <h3>Meet the CEO</h3>
-                <p>Proud military veteran that brings a unique perspective to cyber security, combining disciplined strategy with cutting-edge innovation.</p>
-                <a href="contact.html" class="card-link">Learn More →</a>
-            </div>
-
-            <div class="card">
-                <div class="card-image">
-                    <img src="images/logo.png" alt="Ghostwire Security Logo">
+                <div class="hero-trust">
+                    <p>Trusted by SOC teams • 30-day free trial • No credit card required</p>
                 </div>
-                <h3>Who is Ghostwire Security?</h3>
-                <p>A cybersecurity company dedicated to protecting your digital assets with innovative solutions and proven expertise.</p>
-                <a href="about.html" class="card-link">Learn More →</a>
-            </div>
-
-            <div class="card">
-                <div class="card-image">
-                    <img src="images/services.png" alt="Cybersecurity Services">
-                </div>
-                <h3>Interested in our services?</h3>
-                <p>Discover how we can help secure your organization with comprehensive cybersecurity solutions tailored to your needs.</p>
-                <a href="services.html" class="card-link">Learn More →</a>
             </div>
         </div>
-    </main>
+    </section>
+
+    <section class="products" id="products">
+        <div class="container">
+            <h2 class="section-title">Built for Real SOC Problems</h2>
+            
+            <div class="product-grid">
+                <div class="product-card">
+                    <div class="product-header">
+                        <h3>Ghost</h3>
+                        <span class="product-badge">Most Popular</span>
+                    </div>
+                    <p class="product-tagline">AI-Powered Cyber Triage</p>
+                    <p class="product-description">Cut alert review time by 60%. Ghost uses Claude AI to intelligently triage SIEM alerts, eliminate false positives, and provide actionable remediation steps.</p>
+                    <ul class="product-features">
+                        <li>Integrates with Splunk, Arctic Wolf, Huntress</li>
+                        <li>Automatic threat classification</li>
+                        <li>Natural language incident summaries</li>
+                        <li>Playbook recommendations</li>
+                    </ul>
+                    <div class="product-pricing">
+                        <div class="price">$500/month</div>
+                        <div class="price-detail">after 30-day free trial</div>
+                    </div>
+                    <div class="product-cta">
+                        <a href="ghost.html" class="btn-product">View Demo</a>
+                        <a href="contact.html" class="btn-outline">Schedule Call</a>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-header">
+                        <h3>AuditVault</h3>
+                    </div>
+                    <p class="product-tagline">Automated Compliance Reporting</p>
+                    <p class="product-description">Stop spending 40+ hours per quarter on compliance reports. AuditVault automatically generates audit-ready documentation for NIST, CMMC, ISO 27001, and more.</p>
+                    <ul class="product-features">
+                        <li>Continuous compliance monitoring</li>
+                        <li>Automated evidence collection</li>
+                        <li>Gap analysis and remediation tracking</li>
+                        <li>Executive-ready reports in minutes</li>
+                    </ul>
+                    <div class="product-pricing">
+                        <div class="price">$750/month</div>
+                        <div class="price-detail">after 30-day free trial</div>
+                    </div>
+                    <div class="product-cta">
+                        <a href="auditvault.html" class="btn-product">View Demo</a>
+                        <a href="contact.html" class="btn-outline">Schedule Call</a>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-header">
+                        <h3>OTWI</h3>
+                        <span class="product-badge">DoD Ready</span>
+                    </div>
+                    <p class="product-tagline">OSINT Risk Intelligence</p>
+                    <p class="product-description">Real-time OSINT analysis for DoD contractors and critical infrastructure. Monitor supply chain risks, threat actor activity, and geopolitical intelligence.</p>
+                    <ul class="product-features">
+                        <li>Automated threat actor tracking</li>
+                        <li>Supply chain risk scoring</li>
+                        <li>Dark web monitoring</li>
+                        <li>Custom intelligence feeds</li>
+                    </ul>
+                    <div class="product-pricing">
+                        <div class="price">Custom Pricing</div>
+                        <div class="price-detail">tailored for federal requirements</div>
+                    </div>
+                    <div class="product-cta">
+                        <a href="otwi.html" class="btn-product">View Demo</a>
+                        <a href="contact.html" class="btn-outline">Schedule Call</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-banner">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to reduce alert fatigue?</h2>
+                <p>Schedule a 15-minute demo and see how Ghost can transform your SOC workflow.</p>
+                <a href="contact.html" class="btn-primary-large">Schedule Demo Now</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="about-preview">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-text">
+                    <h2>Built by SOC Analysts, for SOC Analysts</h2>
+                    <p>Founded by Jeremy Ellis, former SOC Analyst with 8+ years Army National Guard experience and Secret clearance. Ghostwire Security was born from real frustration with false positives, alert fatigue, and compliance overhead.</p>
+                    <p>Every tool we build solves a problem we've personally experienced in production SOC environments managing 30+ client infrastructures.</p>
+                    <a href="about.html" class="link-arrow">Learn more about Ghostwire →</a>
+                </div>
+                <div class="about-credentials">
+                    <div class="credential-item">
+                        <div class="credential-number">8+</div>
+                        <div class="credential-label">Years SOC Experience</div>
+                    </div>
+                    <div class="credential-item">
+                        <div class="credential-number">30+</div>
+                        <div class="credential-label">Client Environments Managed</div>
+                    </div>
+                    <div class="credential-item">
+                        <div class="credential-badge">SECRET</div>
+                        <div class="credential-label">Security Clearance</div>
+                    </div>
+                    <div class="credential-item">
+                        <div class="credential-badge">CySA+</div>
+                        <div class="credential-label">Certified Analyst</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <footer class="footer">
-        <div class="footer-container">
-            <img src="images/logo.png" alt="Ghostwire Security Logo" class="footer-logo">
-            <p>Ghostwire Security</p>
-            <p>&copy; 2026. Ghostwire Security LLC. - All rights reserved.</p>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>GHOSTWIRE SECURITY</h3>
+                    <p>Cybersecurity solutions for SOCs and small-to-medium businesses in Northeast Arkansas and beyond.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Products</h4>
+                        <a href="ghost.html">Ghost - Cyber Triage</a>
+                        <a href="auditvault.html">AuditVault - Compliance</a>
+                        <a href="otwi.html">OTWI - OSINT Intelligence</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <a href="about.html">About</a>
+                        <a href="contact.html">Contact</a>
+                        <a href="contact.html">Schedule Demo</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Contact</h4>
+                        <p>Northeast Arkansas</p>
+                        <p><a href="contact.html">Schedule a call</a></p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Ghostwire Security LLC. All rights reserved.</p>
+            </div>
         </div>
     </footer>
 </body>

@@ -3,62 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact | Ghostwire Security</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Contact & Schedule Demo | Ghostwire Security</title>
+    <meta name="description" content="Schedule a 15-minute demo with Ghostwire Security. See how our tools can transform your SOC operations.">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="index.html" class="nav-logo">Ghostwire Security</a>
-            <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link">Home</a></li>
-                <li><a href="about.html" class="nav-link">About</a></li>
-                <li><a href="services.html" class="nav-link">Services</a></li>
-                <li><a href="client-portal.html" class="nav-link">Client Portal</a></li>
-                <li><a href="contact.html" class="nav-link">Contact</a></li>
-            </ul>
+    <nav class="nav">
+        <div class="container">
+            <div class="nav-content">
+                <a href="index.html" class="logo">GHOSTWIRE SECURITY</a>
+                <div class="nav-links">
+                    <a href="index.html#products">Products</a>
+                    <a href="about.html">About</a>
+                    <a href="contact.html" class="btn-nav">Schedule Demo</a>
+                </div>
+            </div>
         </div>
     </nav>
 
-    <main class="hero-section">
-        <div class="content-section">
-            <h1>Contact Us</h1>
-            
-            <p>Ready to take your cybersecurity to the next level? Get in touch with us today. We're here to answer your questions and help you find the right security solutions for your organization.</p>
+    <div class="page-header">
+        <div class="container">
+            <h1 class="page-title">Let's Talk</h1>
+            <p class="page-subtitle">Schedule a 15-minute demo or get in touch about contract SOC work</p>
+        </div>
+    </div>
 
-            <form class="contact-form" action="https://formspree.io/f/meezdewg" method="POST">
-                <div class="form-group">
-                    <label for="name">Name *</label>
-                    <input type="text" id="name" name="name" required>
+    <section class="content-section">
+        <div class="container">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start;">
+                <div>
+                    <h2 style="margin-bottom: 1.5rem;">Schedule a Product Demo</h2>
+                    <p style="color: var(--color-text-dim); margin-bottom: 2rem;">Book a 15-minute call to see Ghost, AuditVault, or OTWI in action. We'll walk through YOUR specific use cases and answer any questions.</p>
+                    
+                    <div style="background: var(--color-surface); border: 2px solid var(--color-border); border-radius: var(--border-radius); padding: 2rem; margin-bottom: 2rem;">
+                        <h3 style="color: var(--color-primary); margin-bottom: 1rem;">📅 Book Your Demo</h3>
+                        <p style="color: var(--color-text-dim); margin-bottom: 1.5rem;">Click below to schedule via Calendly (15 minutes, available weekdays 9am-5pm CT)</p>
+                        
+                        <!-- PLACEHOLDER: Replace this URL with your actual Calendly link -->
+                        <a href="https://calendly.com/your-link-here" target="_blank" class="btn-primary" style="display: block; text-align: center; margin-bottom: 1rem;">
+                            Schedule Demo Call
+                        </a>
+                        
+                        <p style="color: var(--color-text-dim); font-size: 0.9rem; text-align: center;">
+                            No credit card required • 30-day free trials available
+                        </p>
+                    </div>
+                    
+                    <div style="background: var(--color-bg-secondary); padding: 1.5rem; border-radius: var(--border-radius); border: 2px solid var(--color-border);">
+                        <h4 style="color: var(--color-text); margin-bottom: 1rem;">What to Expect:</h4>
+                        <ul style="list-style: none; color: var(--color-text-dim);">
+                            <li style="padding: 0.5rem 0;">✓ Quick overview of the product</li>
+                            <li style="padding: 0.5rem 0;">✓ Live demo with YOUR data (if applicable)</li>
+                            <li style="padding: 0.5rem 0;">✓ Pricing and trial options</li>
+                            <li style="padding: 0.5rem 0;">✓ Q&A about your specific needs</li>
+                            <li style="padding: 0.5rem 0;">✓ No pressure, just information</li>
+                        </ul>
+                    </div>
                 </div>
-
-                <div class="form-group">
-                    <label for="email">Email *</label>
-                    <input type="email" id="email" name="email" required>
+                
+                <div>
+                    <h2 style="margin-bottom: 1.5rem;">Other Ways to Reach Us</h2>
+                    
+                    <div style="background: var(--color-surface); border: 2px solid var(--color-border); border-radius: var(--border-radius); padding: 2rem; margin-bottom: 2rem;">
+                        <h3 style="color: var(--color-primary); margin-bottom: 1rem;">📧 Email</h3>
+                        <p style="color: var(--color-text-dim); margin-bottom: 1rem;">For general inquiries, partnership opportunities, or technical questions:</p>
+                        <!-- PLACEHOLDER: Replace with your actual email -->
+                        <p style="color: var(--color-primary); font-size: 1.1rem;">contact@ghostwiresecurity.com</p>
+                    </div>
+                    
+                    <div style="background: var(--color-surface); border: 2px solid var(--color-border); border-radius: var(--border-radius); padding: 2rem; margin-bottom: 2rem;">
+                        <h3 style="color: var(--color-primary); margin-bottom: 1rem;">💼 Contract SOC Work</h3>
+                        <p style="color: var(--color-text-dim); margin-bottom: 1rem;">Need a contractor for SOC analysis, incident response, or SIEM tuning? I'm available for contract engagements.</p>
+                        <p style="color: var(--color-text-dim); font-size: 0.95rem;">
+                            <strong>Experience:</strong> 8+ years SOC operations<br>
+                            <strong>Tools:</strong> Huntress, Arctic Wolf, Splunk<br>
+                            <strong>Clearance:</strong> Active Secret<br>
+                            <strong>Rate:</strong> Competitive hourly or project-based
+                        </p>
+                    </div>
+                    
+                    <div style="background: var(--color-surface); border: 2px solid var(--color-border); border-radius: var(--border-radius); padding: 2rem;">
+                        <h3 style="color: var(--color-primary); margin-bottom: 1rem;">📍 Location</h3>
+                        <p style="color: var(--color-text-dim);">Based in Northeast Arkansas</p>
+                        <p style="color: var(--color-text-dim); font-size: 0.9rem;">Serving clients nationwide + remote contract work</p>
+                    </div>
                 </div>
-
-                <div class="form-group">
-                    <label for="company">Company</label>
-                    <input type="text" id="company" name="company">
-                </div>
-
-                <div class="form-group">
-                    <label for="message">Message *</label>
-                    <textarea id="message" name="message" required></textarea>
-                </div>
-
-                <button type="submit" class="submit-btn">Send Message</button>
-            </form>
-
-            <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #ddd;">
-                <h2>Other Ways to Reach Us</h2>
-                <p><strong>Email:</strong> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e2818d8c96838196a2858a8d9196958b908791878197908b969bcc818d8f">[email&#160;protected]</a></p>
-                <p><strong>Response Time:</strong> We typically respond within 24 hours</p>
             </div>
         </div>
-    </main>
+    </section>
+
+    <section class="content-section" style="background: var(--color-surface); border-top: 2px solid var(--color-border); border-bottom: 2px solid var(--color-border);">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 3rem;">Frequently Asked Questions</h2>
+            
+            <div style="max-width: 800px; margin: 0 auto;">
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="color: var(--color-primary); margin-bottom: 0.5rem;">Do you offer free trials?</h3>
+                    <p style="color: var(--color-text-dim);">Yes! Ghost and AuditVault come with 30-day free trials. No credit card required. OTWI pricing is custom but we can provide demo access.</p>
+                </div>
+                
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="color: var(--color-primary); margin-bottom: 0.5rem;">What size organizations do you work with?</h3>
+                    <p style="color: var(--color-text-dim);">We primarily serve small-to-medium MSPs, SOC teams, and DoD contractors. Our tools are built to be affordable and practical for teams of 1-50 people.</p>
+                </div>
+                
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="color: var(--color-primary); margin-bottom: 0.5rem;">Can you integrate with our existing tools?</h3>
+                    <p style="color: var(--color-text-dim);">Ghost integrates with major SIEM/EDR platforms (Splunk, Arctic Wolf, Huntress, etc.). AuditVault connects to most compliance and ticketing systems. Let's discuss your specific stack on a demo call.</p>
+                </div>
+                
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="color: var(--color-primary); margin-bottom: 0.5rem;">Do you offer on-premise deployment?</h3>
+                    <p style="color: var(--color-text-dim);">Yes, especially for OTWI and federal customers. We can discuss deployment options based on your security requirements.</p>
+                </div>
+                
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="color: var(--color-primary); margin-bottom: 0.5rem;">What about support?</h3>
+                    <p style="color: var(--color-text-dim);">All products include email support. Priority phone/Slack support is available for enterprise customers. As a small company, you're talking directly to the person who built the tools.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-banner">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to see it in action?</h2>
+                <p>Schedule your demo today. No obligation, just a straightforward conversation about your needs.</p>
+                <!-- PLACEHOLDER: Replace this URL with your actual Calendly link -->
+                <a href="https://calendly.com/your-link-here" target="_blank" class="btn-primary-large">Schedule Demo Now</a>
+            </div>
+        </div>
+    </section>
 
     <footer class="footer">
-        <div class="footer-container">
-            <img src="images/logo.png" alt="Ghostwire Security Logo" class="footer-logo">
-            <p>Ghostwire Security
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>GHOSTWIRE SECURITY</h3>
+                    <p>Cybersecurity solutions for SOCs and small-to-medium businesses.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Products</h4>
+                        <a href="ghost.html">Ghost - Cyber Triage</a>
+                        <a href="auditvault.html">AuditVault - Compliance</a>
+                        <a href="otwi.html">OTWI - OSINT Intelligence</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <a href="about.html">About</a>
+                        <a href="contact.html">Contact</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Contact</h4>
+                        <p><a href="contact.html">Schedule a call</a></p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Ghostwire Security LLC. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

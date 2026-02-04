@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghost: AI Triage & Playbooks - LLM-Assisted Cyber Triage for SOCs</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Work+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0e1a;
+            --bg-card: #141824;
+            --accent-blue: #00d4ff;
+            --accent-purple: #a855f7;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --border-color: #1e293b;
+            --success: #10b981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 14, 26, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+        }
+
+        .logo {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent-blue);
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-blue);
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 212, 255, 0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 80px;
+            padding: 6rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero .subtitle {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .secondary-button {
+            background: transparent;
+            color: var(--accent-blue);
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--accent-blue);
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .secondary-button:hover {
+            background: var(--accent-blue);
+            color: var(--bg-dark);
+        }
+
+        /* Problem Section */
+        .problem-section {
+            padding: 6rem 0;
+            background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-card) 100%);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .problem-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s;
+            animation: fadeInUp 0.8s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .problem-card:nth-child(1) { animation-delay: 0.1s; }
+        .problem-card:nth-child(2) { animation-delay: 0.2s; }
+        .problem-card:nth-child(3) { animation-delay: 0.3s; }
+        .problem-card:nth-child(4) { animation-delay: 0.4s; }
+        .problem-card:nth-child(5) { animation-delay: 0.5s; }
+
+        .problem-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .problem-card h3 {
+            color: var(--accent-blue);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .problem-card p {
+            color: var(--text-secondary);
+        }
+
+        /* Solution Section */
+        .solution-section {
+            padding: 6rem 0;
+            background: var(--bg-dark);
+        }
+
+        .solution-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .solution-features {
+            list-style: none;
+        }
+
+        .solution-features li {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+            animation: fadeInUp 0.8s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .solution-features li:nth-child(1) { animation-delay: 0.1s; }
+        .solution-features li:nth-child(2) { animation-delay: 0.2s; }
+        .solution-features li:nth-child(3) { animation-delay: 0.3s; }
+        .solution-features li:nth-child(4) { animation-delay: 0.4s; }
+        .solution-features li:nth-child(5) { animation-delay: 0.5s; }
+
+        .solution-features li strong {
+            color: var(--accent-blue);
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .solution-features li span {
+            color: var(--text-secondary);
+        }
+
+        .solution-visual {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .solution-visual::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+        }
+
+        .code-block {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+
+        .code-block .keyword {
+            color: var(--accent-purple);
+        }
+
+        .code-block .function {
+            color: var(--accent-blue);
+        }
+
+        .code-block .string {
+            color: var(--success);
+        }
+
+        /* Capabilities Section */
+        .capabilities-section {
+            padding: 6rem 0;
+            background: var(--bg-card);
+        }
+
+        .capabilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .capability-card {
+            background: var(--bg-dark);
+            padding: 2.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s;
+        }
+
+        .capability-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-5px);
+        }
+
+        .capability-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        .capability-card h3 {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .capability-card p {
+            color: var(--text-secondary);
+        }
+
+        /* Benefits Section */
+        .benefits-section {
+            padding: 6rem 0;
+            background: var(--bg-dark);
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .benefit-card {
+            text-align: center;
+            padding: 2rem;
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s;
+        }
+
+        .benefit-card:hover {
+            border-color: var(--accent-blue);
+            transform: scale(1.05);
+        }
+
+        .benefit-number {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .benefit-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .benefit-card h3 {
+            margin: 1rem 0 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 6rem 0;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .cta-section .cta-button {
+            background: white;
+            color: var(--accent-blue);
+        }
+
+        .cta-section .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 0;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-blue);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero .subtitle {
+                font-size: 1.2rem;
+            }
+
+            .solution-content {
+                grid-template-columns: 1fr;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">GHOST</div>
+                <ul class="nav-links">
+                    <li><a href="#problem">Problem</a></li>
+                    <li><a href="#solution">Solution</a></li>
+                    <li><a href="#capabilities">Capabilities</a></li>
+                    <li><a href="#benefits">Benefits</a></li>
+                </ul>
+                <a href="#demo" class="cta-button">Request Demo</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>AI Triage & Playbooks</h1>
+                <p class="subtitle">LLM-Assisted Cyber Triage for SOCs</p>
+                <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.1rem;">
+                    Human-in-the-loop intelligence that cuts through alert noise, 
+                    prioritizes threats, and delivers actionable playbook guidance—all 
+                    without replacing your team's expertise.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#demo" class="cta-button">Start Pilot Program</a>
+                    <a href="#solution" class="secondary-button">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="problem" class="problem-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>The Challenge Facing SOCs</h2>
+                <p>Modern security teams are drowning in alerts with limited resources</p>
+            </div>
+            <div class="problem-grid">
+                <div class="problem-card">
+                    <h3>Alert Floods</h3>
+                    <p>SOCs receive thousands of alerts daily, making it impossible to review each one thoroughly.</p>
+                </div>
+                <div class="problem-card">
+                    <h3>Chronic Understaffing</h3>
+                    <p>Security teams are stretched thin, unable to keep up with the volume of incoming threats.</p>
+                </div>
+                <div class="problem-card">
+                    <h3>Missing Context</h3>
+                    <p>Current tools lack contextual guidance, leaving analysts to piece together information manually.</p>
+                </div>
+                <div class="problem-card">
+                    <h3>Alert Fatigue</h3>
+                    <p>Slow triage times and repetitive work lead to burnout and decreased effectiveness.</p>
+                </div>
+                <div class="problem-card">
+                    <h3>Missed Threats</h3>
+                    <p>Critical threats can be delayed or missed entirely in the noise of false positives.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="solution" class="solution-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Ghost: Your AI Triage Assistant</h2>
+                <p>Intelligent automation that enhances your team's capabilities</p>
+            </div>
+            <div class="solution-content">
+                <div>
+                    <ul class="solution-features">
+                        <li>
+                            <strong>Ingests Full Context</strong>
+                            <span>Pulls alerts plus surrounding data to build complete picture of each incident</span>
+                        </li>
+                        <li>
+                            <strong>Risk-Based Prioritization</strong>
+                            <span>Automatically ranks alerts based on actual threat level and business impact</span>
+                        </li>
+                        <li>
+                            <strong>Triage Summaries</strong>
+                            <span>Generates clear, actionable summaries with recommended next steps</span>
+                        </li>
+                        <li>
+                            <strong>Explainable AI</strong>
+                            <span>Every recommendation includes supporting evidence and reasoning</span>
+                        </li>
+                        <li>
+                            <strong>Seamless Integration</strong>
+                            <span>Works within your existing SIEM, EDR, and ticketing systems</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="solution-visual">
+                    <div class="code-block">
+<span class="keyword">function</span> <span class="function">triageAlert</span>(alert) {<br>
+&nbsp;&nbsp;<span class="keyword">const</span> context = <span class="function">gatherContext</span>(alert);<br>
+&nbsp;&nbsp;<span class="keyword">const</span> risk = <span class="function">assessRisk</span>(context);<br>
+&nbsp;&nbsp;<span class="keyword">const</span> playbook = <span class="function">matchPlaybook</span>(alert);<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;<span class="keyword">return</span> {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;priority: risk.level,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;summary: <span class="string">"Clear triage summary"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;steps: playbook.recommendations,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;evidence: context.supporting_data<br>
+&nbsp;&nbsp;};<br>
+}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="capabilities" class="capabilities-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Core Capabilities</h2>
+                <p>Built for SOC workflows from the ground up</p>
+            </div>
+            <div class="capabilities-grid">
+                <div class="capability-card">
+                    <div class="capability-icon">🔌</div>
+                    <h3>API Connectors</h3>
+                    <p>Integrate with your existing security stack—SIEM, EDR, threat intel feeds, and ticketing systems.</p>
+                </div>
+                <div class="capability-card">
+                    <div class="capability-icon">📦</div>
+                    <h3>Context Packer</h3>
+                    <p>Automatically gathers relevant context from multiple sources to build a complete picture.</p>
+                </div>
+                <div class="capability-card">
+                    <div class="capability-icon">🧠</div>
+                    <h3>LLM Reasoning Layer</h3>
+                    <p>Advanced language models analyze patterns, correlate events, and reason about threats.</p>
+                </div>
+                <div class="capability-card">
+                    <div class="capability-icon">🎯</div>
+                    <h3>Intelligent Classification</h3>
+                    <p>Automatically categorizes and prioritizes alerts based on severity and business impact.</p>
+                </div>
+                <div class="capability-card">
+                    <div class="capability-icon">✅</div>
+                    <h3>Actionable Recommendations</h3>
+                    <p>Provides specific next steps mapped to your team's playbooks and procedures.</p>
+                </div>
+                <div class="capability-card">
+                    <div class="capability-icon">📋</div>
+                    <h3>Audit Trail</h3>
+                    <p>Full logging and explainability for compliance and continuous improvement.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="benefits" class="benefits-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Measurable Impact</h2>
+                <p>Real results for your security operations</p>
+            </div>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-number">70%</div>
+                    <div class="benefit-label">Faster</div>
+                    <h3>Accelerated Triage</h3>
+                    <p>Reduce time-to-triage from hours to minutes</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-number">3x</div>
+                    <div class="benefit-label">Multiplier</div>
+                    <h3>Force Multiplication</h3>
+                    <p>Handle 3x more alerts with the same team size</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-number">85%</div>
+                    <div class="benefit-label">Reduction</div>
+                    <h3>Less Alert Fatigue</h3>
+                    <p>Analysts focus on high-value investigations</p>
+                </div>
+            </div>
+            <div style="margin-top: 4rem; text-align: center;">
+                <h3 style="margin-bottom: 2rem; font-size: 1.8rem;">Additional Benefits</h3>
+                <div class="problem-grid">
+                    <div class="problem-card">
+                        <h3>Improved Consistency</h3>
+                        <p>Standardized triage approach across all shifts and team members</p>
+                    </div>
+                    <div class="problem-card">
+                        <h3>Better Mission Protection</h3>
+                        <p>Critical threats surface faster with less chance of being overlooked</p>
+                    </div>
+                    <div class="problem-card">
+                        <h3>Audit-Ready</h3>
+                        <p>Complete documentation trail for compliance and incident reviews</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="demo" class="cta-section">
+        <div class="container">
+            <h2>Ready to Transform Your SOC?</h2>
+            <p>Start with a pilot program and see the difference Ghost makes in your environment</p>
+            <a href="#contact" class="cta-button">Schedule a Demo</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <div class="logo" style="text-align: left;">GHOST</div>
+                    <p style="margin-top: 0.5rem;">AI Triage & Playbooks for Modern SOCs</p>
+                </div>
+                <ul class="footer-links">
+                    <li><a href="#problem">Problem</a></li>
+                    <li><a href="#solution">Solution</a></li>
+                    <li><a href="#capabilities">Capabilities</a></li>
+                    <li><a href="#benefits">Benefits</a></li>
+                    <li><a href="#demo">Contact</a></li>
+                </ul>
+            </div>
+            <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border-color);">
+                <p>&copy; 2025 Ghost. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>

@@ -597,3 +597,47 @@ body {
     display: block;
     margin-bottom: var(--space-xs);
 }
+
+/* Waitlist Form Styles */
+.waitlist-form {
+    display: flex;
+    gap: 1rem;
+    margin: 2rem 0;
+    width: 100%;
+}
+
+.waitlist-input {
+    flex: 1;
+    background: var(--color-bg-secondary);
+    border: 2px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: 0.8rem 1.2rem;
+    color: white;
+    font-family: inherit;
+    transition: border-color 0.3s ease;
+}
+
+.waitlist-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.waitlist-submit {
+    cursor: pointer;
+    border: none;
+    /* btn-primary styles usually handle the rest, 
+       but we ensure it aligns with the input height */
+    padding: 0.8rem 2rem; 
+    white-space: nowrap;
+}
+
+/* Responsive adjustment for mobile */
+@media (max-width: 600px) {
+    .waitlist-form {
+        flex-direction: column;
+    }
+    
+    .waitlist-submit {
+        width: 100%;
+    }
+}

@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTWI Demo - Interactive Daily Cyber Brief</title>
+    <meta name="description" content="Try OTWI's daily cyber brief - see how we analyze and prioritize threat intelligence from 12+ sources.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #020617;
+            color: #f1f5f9;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-pattern {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-gradient {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(6, 78, 59, 0.2) 0%, #020617 50%, rgba(29, 78, 216, 0.2) 100%);
+        }
+
+        .bg-orb {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: rgba(6, 182, 212, 0.05);
+            border-radius: 50%;
+            filter: blur(80px);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        .bg-orb:nth-child(2) {
+            top: 50%;
+            right: 20%;
+            background: rgba(37, 99, 235, 0.05);
+            animation-delay: 2s;
+        }
+
+        .bg-grid {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(6, 182, 212, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(6, 182, 212, 0.03) 1px, transparent 1px);
+            background-size: 100px 100px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(2, 6, 23, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(6, 182, 212, 0.1);
+            box-shadow: 0 4px 20px rgba(6, 182, 212, 0.05);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #06b6d4, #2563eb);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #06b6d4, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-subtitle {
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .btn-primary {
+            padding: 0.5rem 1.5rem;
+            background: linear-gradient(135deg, #06b6d4, #2563eb);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 8px 30px rgba(6, 182, 212, 0.25);
+            transform: translateY(-2px);
+        }
+
+        /* Main Content */
+        main {
+            position: relative;
+            z-index: 1;
+            padding-top: 5rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Demo Header */
+        .demo-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .demo-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .demo-subtitle {
+            font-size: 1.25rem;
+            color: #94a3b8;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Brief Container */
+        .brief-container {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid #1e293b;
+            border-radius: 16px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Brief Header */
+        .brief-header {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(37, 99, 235, 0.1));
+            border-bottom: 1px solid #1e293b;
+            padding: 2rem;
+        }
+
+        .brief-header-top {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .brief-logo {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #06b6d4, #2563eb);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .brief-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .brief-meta {
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+
+        /* Severity Filter */
+        .severity-filter {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .severity-btn {
+            padding: 0.75rem 1.5rem;
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid #475569;
+            border-radius: 8px;
+            color: #cbd5e1;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .severity-btn:hover {
+            background: rgba(30, 41, 59, 0.8);
+        }
+
+        .severity-btn.active {
+            border-color: currentColor;
+        }
+
+        .severity-btn.critical {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .severity-btn.critical.active {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+        }
+
+        .severity-btn.high {
+            color: #f97316;
+            background: rgba(249, 115, 22, 0.1);
+        }
+
+        .severity-btn.high.active {
+            background: rgba(249, 115, 22, 0.2);
+            border-color: #f97316;
+        }
+
+        .severity-btn.medium {
+            color: #eab308;
+            background: rgba(234, 179, 8, 0.1);
+        }
+
+        .severity-btn.medium.active {
+            background: rgba(234, 179, 8, 0.2);
+            border-color: #eab308;
+        }
+
+        .severity-btn.low {
+            color: #22c55e;
+            background: rgba(34, 197, 94, 0.1);
+        }
+
+        .severity-btn.low.active {
+            background: rgba(34, 197, 94, 0.2);
+            border-color: #22c55e;
+        }
+
+        /* Articles Container */
+        .articles-container {
+            padding: 2rem;
+        }
+
+        .articles-empty {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #64748b;
+        }
+
+        /* Article Card */
+        .article-card {
+            padding: 1.5rem;
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid #334155;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .article-card:hover {
+            border-color: rgba(6, 182, 212, 0.3);
+            background: rgba(30, 41, 59, 0.7);
+            transform: translateY(-2px);
+        }
+
+        .article-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            gap: 1rem;
+        }
+
+        .severity-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border: 1px solid;
+        }
+
+        .severity-badge.critical {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .severity-badge.high {
+            background: rgba(249, 115, 22, 0.1);
+            color: #f97316;
+            border-color: rgba(249, 115, 22, 0.3);
+        }
+
+        .severity-badge.medium {
+            background: rgba(234, 179, 8, 0.1);
+            color: #eab308;
+            border-color: rgba(234, 179, 8, 0.3);
+        }
+
+        .severity-badge.low {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+            border-color: rgba(34, 197, 94, 0.3);
+        }
+
+        .article-source {
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+
+        .article-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #e2e8f0;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .article-summary {
+            color: #94a3b8;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .article-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .article-category {
+            padding: 0.25rem 0.75rem;
+            background: rgba(51, 65, 85, 0.5);
+            border-radius: 50px;
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+
+        .article-link {
+            color: #06b6d4;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            transition: color 0.3s;
+        }
+
+        .article-link:hover {
+            color: #22d3ee;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            padding: 1.5rem 2rem;
+            background: rgba(15, 23, 42, 0.7);
+            border-top: 1px solid #1e293b;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-value.critical { color: #ef4444; }
+        .stat-value.high { color: #f97316; }
+        .stat-value.medium { color: #eab308; }
+        .stat-value.low { color: #22c55e; }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            margin-top: 4rem;
+            text-align: center;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(37, 99, 235, 0.1));
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            border-radius: 16px;
+        }
+
+        .cta-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .cta-subtitle {
+            font-size: 1.125rem;
+            color: #94a3b8;
+            margin-bottom: 2rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .demo-title {
+                font-size: 2rem;
+            }
+
+            .severity-filter {
+                justify-content: center;
+            }
+
+            .article-footer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Pattern -->
+    <div class="bg-pattern">
+        <div class="bg-gradient"></div>
+        <div class="bg-orb"></div>
+        <div class="bg-orb"></div>
+        <div class="bg-grid"></div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <a href="otwi-landing.html" class="logo">
+                <div class="logo-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <div class="logo-title">OTWI</div>
+                    <div class="logo-subtitle">Over the Wire Intelligence</div>
+                </div>
+            </a>
+            <div class="header-nav">
+                <a href="otwi-landing.html" class="btn-primary">Start Free Trial</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <!-- Demo Header -->
+            <div class="demo-header">
+                <h1 class="demo-title">
+                    Interactive <span style="background: linear-gradient(90deg, #06b6d4, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Demo</span>
+                </h1>
+                <p class="demo-subtitle">
+                    Explore a real daily cyber brief. Click severity levels to filter threats. This is what you'll receive every morning.
+                </p>
+            </div>
+
+            <!-- Brief Container -->
+            <div class="brief-container">
+                <!-- Brief Header -->
+                <div class="brief-header">
+                    <div class="brief-header-top">
+                        <div class="brief-logo">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="brief-title">Daily Cyber Brief</div>
+                            <div class="brief-meta">January 12, 2026 • 40 Articles Analyzed</div>
+                        </div>
+                    </div>
+
+                    <!-- Severity Filter -->
+                    <div class="severity-filter">
+                        <button class="severity-btn all active" onclick="filterArticles('all')">
+                            All (40)
+                        </button>
+                        <button class="severity-btn critical" onclick="filterArticles('critical')">
+                            Critical (26)
+                        </button>
+                        <button class="severity-btn high" onclick="filterArticles('high')">
+                            High (0)
+                        </button>
+                        <button class="severity-btn medium" onclick="filterArticles('medium')">
+                            Medium (5)
+                        </button>
+                        <button class="severity-btn low" onclick="filterArticles('low')">
+                            Low (9)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Articles Container -->
+                <div class="articles-container" id="articlesContainer">
+                    <!-- Articles will be dynamically inserted here -->
+                </div>
+
+                <!-- Stats Bar -->
+                <div class="stats-bar">
+                    <div class="stat-item">
+                        <div class="stat-value critical">26</div>
+                        <div class="stat-label">Critical</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value high">0</div>
+                        <div class="stat-label">High</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value medium">5</div>
+                        <div class="stat-label">Medium</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value low">9</div>
+                        <div class="stat-label">Low</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA Section -->
+            <div class="cta-section">
+                <h2 class="cta-title">Ready to get this daily?</h2>
+                <p class="cta-subtitle">
+                    Join 500+ security teams receiving prioritized threat intelligence every morning.
+                </p>
+                <div class="cta-buttons">
+                    <a href="otwi-landing.html" class="btn-primary" style="padding: 1rem 2rem; font-size: 1.125rem;">
+                        Start 14-Day Free Trial
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Demo articles data
+        const articles = [
+            {
+                severity: 'critical',
+                title: 'China-Linked Hackers Exploit VMware ESXi Zero-Days',
+                source: 'The Hacker News',
+                category: 'Zero-Day',
+                summary: 'Advanced persistent threat actors linked to China have been actively exploiting previously unknown zero-day vulnerabilities in VMware ESXi hypervisors. The attacks target enterprise virtualization infrastructure with sophisticated malware designed to persist across reboots and evade detection. Organizations are urged to implement emergency patches and review hypervisor access logs.',
+                url: '#'
+            },
+            {
+                severity: 'critical',
+                title: 'Trend Micro Apex Central RCE Flaw Scores 9.8 CVSS',
+                source: 'The Hacker News',
+                category: 'Vulnerability',
+                summary: 'Security researchers discovered a critical remote code execution vulnerability in Trend Micro Apex Central with a CVSS score of 9.8. Successful exploitation allows unauthenticated attackers to execute arbitrary code on affected systems, potentially compromising entire security infrastructure. Trend Micro has released emergency patches.',
+                url: '#'
+            },
+            {
+                severity: 'critical',
+                title: 'CISA Adds Four Actively Exploited Flaws to KEV Catalog',
+                source: 'The Hacker News',
+                category: 'Exploit',
+                summary: 'CISA has added four new vulnerabilities to its Known Exploited Vulnerabilities catalog, indicating active exploitation in the wild. The flaws affect widely-deployed enterprise software including networking equipment and web applications. Federal agencies have been given 21 days to patch affected systems.',
+                url: '#'
+            },
+            {
+                severity: 'critical',
+                title: 'Chinese Hackers Use Anthropic\'s AI to Launch Automated Attacks',
+                source: 'The Hacker News',
+                category: 'Nation-State',
+                summary: 'Nation-state actors from China have been observed using Anthropic\'s Claude AI to automate reconnaissance and payload generation in sophisticated attacks. The threat group leverages large language models to craft context-aware phishing campaigns and generate polymorphic malware that evades traditional detection.',
+                url: '#'
+            },
+            {
+                severity: 'critical',
+                title: 'Russian Hackers Gamaredon and Turla Collaborate',
+                source: 'The Hacker News',
+                category: 'Threat Intelligence',
+                summary: 'Intelligence agencies report unprecedented collaboration between Russian cyber espionage groups Gamaredon and Turla, sharing infrastructure and tools. This alliance represents a significant escalation in coordinated threat actor operations targeting government and critical infrastructure sectors across Eastern Europe.',
+                url: '#'
+            },
+            {
+                severity: 'critical',
+                title: 'Trust Wallet Chrome Extension Hack Drains $8.5M',
+                source: 'The Hacker News',
+                category: 'Data Breach',
+                summary: 'A sophisticated supply chain attack compromised the Trust Wallet Chrome extension, resulting in $8.5 million stolen from cryptocurrency users. The malicious update intercepted private keys during transactions, highlighting the ongoing risks of browser-based crypto wallet extensions.',
+                url: '#'
+            },
+            {
+                severity: 'medium',
+                title: 'CISA Retires 10 Emergency Cybersecurity Directives',
+                source: 'DHS News',
+                category: 'Policy',
+                summary: 'The Cybersecurity and Infrastructure Security Agency announced the retirement of ten emergency directives following successful implementation and compliance across federal agencies. The move reflects improved baseline security posture and the effectiveness of the BOD framework.',
+                url: '#'
+            },
+            {
+                severity: 'medium',
+                title: 'Traditional Security Frameworks Leave Organizations Vulnerable',
+                source: 'The Hacker News',
+                category: 'Analysis',
+                summary: 'New research indicates that legacy security frameworks fail to address modern attack vectors including cloud-native threats and AI-powered attacks. Organizations are encouraged to adopt zero-trust architectures and continuous validation rather than perimeter-based defenses.',
+                url: '#'
+            },
+            {
+                severity: 'medium',
+                title: 'Google Identifies Three New Russian Malware Families',
+                source: 'The Hacker News',
+                category: 'Malware',
+                summary: 'Google\'s Threat Analysis Group identified three previously unknown malware families attributed to Russian state-sponsored actors. The tools demonstrate advanced evasion techniques including anti-sandbox capabilities and encrypted command-and-control communications.',
+                url: '#'
+            },
+            {
+                severity: 'low',
+                title: 'Most Parked Domains Now Serving Malicious Content',
+                source: 'Krebs on Security',
+                category: 'Research',
+                summary: 'Recent analysis reveals that over 60% of parked domains are now being used to serve malicious content including phishing pages and malware distribution. The trend represents a shift from passive monetization to active threat infrastructure.',
+                url: '#'
+            },
+            {
+                severity: 'low',
+                title: 'Happy 16th Birthday, KrebsOnSecurity.com!',
+                source: 'Krebs on Security',
+                category: 'Industry News',
+                summary: 'Renowned cybersecurity journalist Brian Krebs celebrates 16 years of independent security reporting. The site has become a trusted source for breaking news on cybercrime, data breaches, and security research.',
+                url: '#'
+            },
+            {
+                severity: 'low',
+                title: 'Dismantling Defenses: Trump 2.0 Cyber Year in Review',
+                source: 'Krebs on Security',
+                category: 'Analysis',
+                summary: 'Comprehensive analysis of cybersecurity policy changes and their implications for national security. The report examines shifts in federal cybersecurity strategy, changes to CISA leadership, and the impact on public-private partnerships.',
+                url: '#'
+            },
+            {
+                severity: 'critical',
+                title: 'China-Linked UAT-7290 Targets Telecoms with Linux Malware',
+                source: 'The Hacker News',
+                category: 'Nation-State',
+                summary: 'A newly identified Chinese APT group designated UAT-7290 has been targeting telecommunications providers across Southeast Asia with custom Linux malware. The campaign focuses on compromising network management systems to enable long-term surveillance and data exfiltration.',
+                url: '#'
+            },
+            {
+                severity: 'critical',
+                title: 'From HealthKick to GOVERSHELL: The Evolution of UTA0137',
+                source: 'The Hacker News',
+                category: 'Threat Intelligence',
+                summary: 'Researchers document the evolution of threat actor UTA0137 from healthcare-focused attacks to broader government targeting. The group\'s new GOVERSHELL backdoor demonstrates significant capability improvements including advanced persistence mechanisms and modular payload delivery.',
+                url: '#'
+            },
+            {
+                severity: 'critical',
+                title: 'EvilAI Malware Masquerades as AI Tools to Infiltrate Organizations',
+                source: 'The Hacker News',
+                category: 'Malware',
+                summary: 'A new malware family dubbed EvilAI disguises itself as legitimate AI productivity tools to gain initial access to corporate networks. Once installed, the malware establishes persistent access and deploys additional payloads including keyloggers and credential stealers.',
+                url: '#'
+            },
+            {
+                severity: 'critical',
+                title: 'The Kimwolf Botnet is Stalking Your Local Network',
+                source: 'Krebs on Security',
+                category: 'Botnet',
+                summary: 'Security researchers warn of the rapidly expanding Kimwolf botnet targeting home routers and IoT devices. The botnet employs sophisticated scanning techniques to identify vulnerable devices on local networks, then pivots to compromise additional systems behind corporate firewalls.',
+                url: '#'
+            },
+            {
+                severity: 'critical',
+                title: 'Who Benefited from the Aisuru and Kimwolf Botnets?',
+                source: 'Krebs on Security',
+                category: 'Investigation',
+                summary: 'Investigative analysis reveals financial ties between multiple botnet operations and cryptocurrency mining operations. The research suggests coordination between threat actors previously thought to be operating independently, with shared infrastructure spanning multiple continents.',
+                url: '#'
+            },
+            {
+                severity: 'critical',
+                title: 'Bitfinex Hack Convict Released Early from Federal Prison',
+                source: 'The Hacker News',
+                category: 'Cybercrime',
+                summary: 'Ilya Lichtenstein, convicted in the 2016 Bitfinex cryptocurrency exchange hack that netted $4.5 billion, has been released early from federal custody. The case highlighted weaknesses in cryptocurrency exchange security and raised questions about sentencing guidelines for cyber offenses.',
+                url: '#'
+            },
+            {
+                severity: 'medium',
+                title: 'Advanced Dark Web Monitoring Solutions',
+                source: 'SOCRadar',
+                category: 'Tools',
+                summary: 'New capabilities in dark web monitoring platforms now provide real-time alerts for stolen credentials and data leaks. The enhanced detection leverages machine learning to identify organizational assets appearing on underground marketplaces and forums.',
+                url: '#'
+            },
+            {
+                severity: 'low',
+                title: 'Cyber Threat Intelligence Best Practices Report',
+                source: 'SOCRadar',
+                category: 'Research',
+                summary: 'Comprehensive guide to implementing effective threat intelligence programs in enterprise environments. The report covers source selection, data normalization, analysis workflows, and integration with existing security tools for maximum operational value.',
+                url: '#'
+            }
+        ];
+
+        // Current filter
+        let currentFilter = 'all';
+
+        // Render articles
+        function renderArticles(filter) {
+            const container = document.getElementById('articlesContainer');
+            const filteredArticles = filter === 'all' 
+                ? articles 
+                : articles.filter(a => a.severity === filter);
+
+            if (filteredArticles.length === 0) {
+                container.innerHTML = `
+                    <div class="articles-empty">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto 1rem; opacity: 0.3;">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <p>No articles found for this severity level.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filteredArticles.map(article => `
+                <div class="article-card">
+                    <div class="article-header">
+                        <div class="severity-badge ${article.severity}">${article.severity}</div>
+                        <div class="article-source">${article.source}</div>
+                    </div>
+                    <h3 class="article-title">${article.title}</h3>
+                    <p class="article-summary">${article.summary}</p>
+                    <div class="article-footer">
+                        <div class="article-category">${article.category}</div>
+                        <a href="${article.url}" class="article-link">
+                            Read full article
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Filter articles
+        function filterArticles(severity) {
+            currentFilter = severity;
+            
+            // Update button states
+            document.querySelectorAll('.severity-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Render filtered articles
+            renderArticles(severity);
+        }
+
+        // Initial render
+        renderArticles('all');
+    </script>
+</body>
+</html>

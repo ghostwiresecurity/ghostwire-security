@@ -124,25 +124,29 @@
     </section>
 
     <section class="content-section">
-        <div class="newsletter-form-container">
-            <form class="newsletter-form waitlist-form" id="waitlistForm" action="https://app.loops.so/api/newsletter-form/cml77ymzd0fe90i17uecx5h7u" method="POST">
-                <input type="hidden" name="mailingLists" value="cml89mz2d09ax0izo2jj936i5">
-                <input class="newsletter-form-input waitlist-input" placeholder="Enter your email" required="" type="email" name="newsletter-form-input">
-                <button type="submit" class="newsletter-form-button waitlist-submit btn-primary">Join Waitlist</button>
-                <button type="button" class="newsletter-loading-button waitlist-submit btn-primary" style="display: none;" disabled>Please wait...</button>
-            </form>
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 3rem;">Ready to Join the Future Complaince Management?</h2>
+            <div style="max-width: 600px; margin: 0 auto; background: var(--color-surface); padding: 2rem; border-radius: var(--border-radius); border-left: 4px solid var(--color-primary);">
+                
+                <div class="newsletter-form-container">
+                    <form class="newsletter-form waitlist-form" id="waitlistForm" action="https://app.loops.so/api/newsletter-form/cml77ymzd0fe90i17uecx5h7u" method="POST">
+                        <input type="hidden" name="mailingLists" value="cml89mz2d09ax0izo2jj936i5">
+                        
+                        <input class="newsletter-form-input waitlist-input" placeholder="Enter your email" required="" type="email" name="newsletter-form-input">
+                        <button type="submit" class="newsletter-form-button waitlist-submit btn-primary">Join Waitlist</button>
+                        
+                        <button type="button" class="newsletter-loading-button waitlist-submit btn-primary" style="display: none;" disabled>Please wait...</button>
+                    </form>
 
-    <div class="newsletter-success" style="display: none; margin-top: 1.5rem; padding: 1rem; background: rgba(0, 255, 157, 0.1); border: 1px solid var(--color-primary); border-radius: var(--border-radius); text-align: center;">
-        <p class="newsletter-success-message" style="color: var(--color-primary); font-weight: bold; margin: 0;">✓ Thank you! You're on the list.</p>
-    </div>
+                    <div id="successMessage" class="newsletter-success" style="display: none; margin-top: 1.5rem; padding: 1rem; background: rgba(0, 255, 157, 0.1); border: 1px solid var(--color-primary); border-radius: var(--border-radius); text-align: center;">
+                        <p style="color: var(--color-primary); font-weight: bold; margin: 0;">✓ You're on the list! Keep an eye on your inbox.</p>
+                    </div>
 
-    <div class="newsletter-error" style="display: none; margin-top: 1rem; color: #ff4444; text-align: center;">
-        <p class="newsletter-error-message">Oops! Something went wrong.</p>
-        <button class="newsletter-back-button" type="button" style="background:none; border:none; color:var(--color-text-dim); cursor:pointer; text-decoration:underline;">&larr; Try again</button>
-    </div>
-</div>
-                            
-                <p style="color: var(--color-text-dim); margin-bottom: 2rem; text-align: center;">No commitment required. Unsubscribe anytime.</p>
+                    <div class="newsletter-error" style="display: none; margin-top: 1rem; color: #ff4444; text-align: center;">
+                        <p class="newsletter-error-message">Oops! Something went wrong.</p>
+                        <button class="newsletter-back-button" type="button" style="background:none; border:none; color:var(--color-text-dim); cursor:pointer; text-decoration:underline;">&larr; Try again</button>
+                    </div>
+                </div>
             </div>
         </div>
     </section>

@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audit Evidence Collector - Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f7fa;
+            color: #1a202c;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #2563eb;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        select {
+            padding: 0.5rem 1rem;
+            border: 1px solid #cbd5e0;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            background: white;
+            cursor: pointer;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        /* Layout */
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 65px);
+        }
+
+        .sidebar {
+            width: 250px;
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            padding: 1.5rem 0;
+        }
+
+        .nav-item {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #4a5568;
+        }
+
+        .nav-item:hover {
+            background: #f7fafc;
+            color: #2563eb;
+        }
+
+        .nav-item.active {
+            background: #eff6ff;
+            color: #2563eb;
+            border-left: 3px solid #2563eb;
+        }
+
+        .content {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1400px;
+        }
+
+        /* Dashboard */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .stat-detail {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 0.5rem;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.625rem 1.25rem;
+            border: none;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #475569;
+            border: 1px solid #cbd5e0;
+        }
+
+        .btn-secondary:hover {
+            background: #f8fafc;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        /* Upload Zone */
+        .upload-zone {
+            border: 2px dashed #cbd5e0;
+            border-radius: 0.5rem;
+            padding: 3rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 1.5rem;
+        }
+
+        .upload-zone:hover {
+            border-color: #2563eb;
+            background: #f8fafc;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 0.625rem;
+            border: 1px solid #cbd5e0;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+        }
+
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Evidence List */
+        .evidence-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .evidence-item {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            transition: all 0.2s;
+        }
+
+        .evidence-item:hover {
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .evidence-info {
+            flex: 1;
+        }
+
+        .evidence-title {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.25rem;
+        }
+
+        .evidence-meta {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+        }
+
+        .evidence-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .tag {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .tag-framework {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .tag-control {
+            background: #fce7f3;
+            color: #9f1239;
+        }
+
+        .badge {
+            padding: 0.25rem 0.625rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-complete {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-needs-review {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #64748b;
+        }
+
+        .close-btn:hover {
+            color: #1e293b;
+        }
+
+        /* Framework Coverage */
+        .framework-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .framework-item {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            border-left: 4px solid #2563eb;
+        }
+
+        .framework-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar {
+            background: #e2e8f0;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+        }
+
+        .progress-fill {
+            background: #2563eb;
+            height: 100%;
+            transition: width 0.3s;
+        }
+
+        .progress-text {
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .filter-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #64748b;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 1.25rem;
+            height: 1.25rem;
+            cursor: pointer;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .btn-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: flex-end;
+        }
+
+        .btn-small {
+            font-size: 0.75rem;
+            padding: 0.375rem 0.75rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">🔐 Audit Evidence Collector</div>
+            <div class="header-controls">
+                <select id="tenantSelect">
+                    <option value="acme-corp">Acme Corp</option>
+                    <option value="techstart-inc">TechStart Inc</option>
+                    <option value="secure-systems">Secure Systems LLC</option>
+                </select>
+                <select id="roleSelect">
+                    <option value="Admin">Admin</option>
+                    <option value="Editor">Editor</option>
+                    <option value="Auditor">Auditor (Read-Only)</option>
+                </select>
+            </div>
+        </header>
+
+        <!-- Main Container -->
+        <div class="main-container">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <nav>
+                    <div class="nav-item active" data-view="dashboard">📊 Dashboard</div>
+                    <div class="nav-item" data-view="evidence">📁 Evidence</div>
+                    <div class="nav-item" data-view="frameworks">🛡️ Frameworks</div>
+                    <div class="nav-item" data-view="export">⬇️ Export</div>
+                </nav>
+            </aside>
+
+            <!-- Content Area -->
+            <main class="content">
+                <!-- Dashboard View -->
+                <div id="dashboardView" class="view-content">
+                    <h1 id="dashboardTitle" style="margin-bottom: 2rem;">Dashboard</h1>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Total Evidence</div>
+                            <div class="stat-value" id="statTotal">0</div>
+                            <div class="stat-detail">Collected items</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Complete</div>
+                            <div class="stat-value" id="statComplete" style="color: #10b981;">0</div>
+                            <div class="stat-detail">Audit ready</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Pending</div>
+                            <div class="stat-value" id="statPending" style="color: #f59e0b;">0</div>
+                            <div class="stat-detail">In progress</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Needs Review</div>
+                            <div class="stat-value" id="statNeedsReview" style="color: #ef4444;">0</div>
+                            <div class="stat-detail">Requires attention</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title" style="margin-bottom: 1rem;">Recent Evidence</div>
+                        <div id="recentEvidenceList" class="evidence-list"></div>
+                    </div>
+                </div>
+
+                <!-- Evidence View -->
+                <div id="evidenceView" class="view-content hidden">
+                    <div class="card-header">
+                        <h1>Evidence Management</h1>
+                        <button class="btn btn-primary" id="uploadBtn">📤 Upload Evidence</button>
+                    </div>
+
+                    <div class="filters">
+                        <div class="filter-group">
+                            <label class="filter-label">Framework</label>
+                            <select class="form-select" id="filterFramework" style="width: 200px;">
+                                <option value="all">All Frameworks</option>
+                                <option value="soc2">SOC 2</option>
+                                <option value="iso27001">ISO 27001</option>
+                                <option value="hipaa">HIPAA</option>
+                                <option value="pci">PCI-DSS</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Status</label>
+                            <select class="form-select" id="filterStatus" style="width: 200px;">
+                                <option value="all">All Statuses</option>
+                                <option value="complete">Complete</option>
+                                <option value="pending">Pending</option>
+                                <option value="needs-review">Needs Review</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="evidenceList" class="evidence-list"></div>
+                </div>
+
+                <!-- Frameworks View -->
+                <div id="frameworksView" class="view-content hidden">
+                    <h1 style="margin-bottom: 2rem;">Framework Coverage</h1>
+                    <div id="frameworkList" class="framework-list"></div>
+                </div>
+
+                <!-- Export View -->
+                <div id="exportView" class="view-content hidden">
+                    <h1 style="margin-bottom: 2rem;">Export Audit Package</h1>
+                    <div class="card">
+                        <div class="form-group">
+                            <label class="form-label">Framework</label>
+                            <select class="form-select" id="exportFramework">
+                                <option value="all">All Frameworks</option>
+                                <option value="soc2">SOC 2</option>
+                                <option value="iso27001">ISO 27001</option>
+                                <option value="hipaa">HIPAA</option>
+                                <option value="pci">PCI-DSS</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Status Filter</label>
+                            <select class="form-select" id="exportStatus">
+                                <option value="all">All Statuses</option>
+                                <option value="complete">Complete Only</option>
+                            </select>
+                        </div>
+
+                        <div style="background: #f8fafc; padding: 1rem; border-radius: 0.375rem; margin-top: 1rem;">
+                            <div style="font-weight: 600; margin-bottom: 0.5rem;">Export Summary</div>
+                            <div id="exportSummary" style="font-size: 0.875rem; color: #64748b;"></div>
+                        </div>
+
+                        <button class="btn btn-success" id="exportBtn" style="margin-top: 1rem;">⬇️ Download Audit Package</button>
+                    </div>
+
+                    <div class="card" style="margin-top: 1.5rem;">
+                        <div class="card-title" style="margin-bottom: 1rem;">Preview: Evidence to be Exported</div>
+                        <div id="exportPreviewList" class="evidence-list"></div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Upload Modal -->
+    <div id="uploadModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Upload Evidence</h2>
+                <button class="close-btn" id="closeUploadModal">×</button>
+            </div>
+
+            <div class="upload-zone">
+                <p style="font-size: 2rem; margin-bottom: 1rem;">📤</p>
+                <p style="color: #64748b;">Drag & drop files here or click to browse</p>
+                <p style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.5rem;">
+                    Supports: PDF, Excel, Screenshots, Logs
+                </p>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Title *</label>
+                <input class="form-input" type="text" id="evidenceTitle" placeholder="e.g., Q1 2025 Access Review">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Description</label>
+                <textarea class="form-textarea" id="evidenceDescription" placeholder="Describe this evidence item..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Date</label>
+                <input class="form-input" type="date" id="evidenceDate">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Status</label>
+                <select class="form-select" id="evidenceStatus">
+                    <option value="pending">Pending</option>
+                    <option value="complete">Complete</option>
+                    <option value="needs-review">Needs Review</option>
+                </select>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button class="btn btn-secondary" id="cancelUpload">Cancel</button>
+                <button class="btn btn-primary" id="submitUpload">Upload Evidence</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tag Modal -->
+    <div id="tagModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Tag Evidence</h2>
+                <button class="close-btn" id="closeTagModal">×</button>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Evidence Item</label>
+                <div id="tagEvidenceInfo" style="padding: 0.75rem; background: #f8fafc; border-radius: 0.375rem;"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Frameworks</label>
+                <div id="frameworkCheckboxes"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Controls</label>
+                <div id="controlCheckboxes"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Status</label>
+                <select class="form-select" id="tagEvidenceStatus">
+                    <option value="pending">Pending</option>
+                    <option value="complete">Complete</option>
+                    <option value="needs-review">Needs Review</option>
+                </select>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button class="btn btn-secondary" id="cancelTag">Cancel</button>
+                <button class="btn btn-primary" id="submitTag">Save Tags</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data
+        const FRAMEWORKS = {
+            soc2: { id: 'soc2', name: 'SOC 2' },
+            iso27001: { id: 'iso27001', name: 'ISO 27001' },
+            hipaa: { id: 'hipaa', name: 'HIPAA' },
+            pci: { id: 'pci', name: 'PCI-DSS' }
+        };
+
+        const CONTROLS = {
+            soc2: [
+                { id: 'cc6.1', name: 'CC6.1 - Logical Access Controls' },
+                { id: 'cc7.2', name: 'CC7.2 - System Monitoring' },
+                { id: 'cc8.1', name: 'CC8.1 - Change Management' }
+            ],
+            iso27001: [
+                { id: 'a9.2.1', name: 'A.9.2.1 - User Registration' },
+                { id: 'a12.4.1', name: 'A.12.4.1 - Event Logging' },
+                { id: 'a14.2.2', name: 'A.14.2.2 - System Change Control' }
+            ],
+            hipaa: [
+                { id: '164.308', name: '§164.308 - Administrative Safeguards' },
+                { id: '164.312', name: '§164.312 - Technical Safeguards' }
+            ],
+            pci: [
+                { id: 'req8', name: 'Requirement 8 - Access Control' },
+                { id: 'req10', name: 'Requirement 10 - Logging & Monitoring' }
+            ]
+        };
+
+        const TENANTS = {
+            'acme-corp': 'Acme Corp',
+            'techstart-inc': 'TechStart Inc',
+            'secure-systems': 'Secure Systems LLC'
+        };
+
+        let evidence = [
+            {
+                id: 1,
+                title: 'Q4 2024 Access Review',
+                description: 'Quarterly access review - all inactive accounts removed',
+                date: '2024-12-15',
+                status: 'complete',
+                frameworks: ['soc2', 'iso27001'],
+                controls: ['cc6.1', 'a9.2.1'],
+                fileType: 'xlsx',
+                tenant: 'acme-corp'
+            },
+            {
+                id: 2,
+                title: 'SIEM Configuration Logs',
+                description: 'System monitoring configuration and test results',
+                date: '2024-12-10',
+                status: 'complete',
+                frameworks: ['soc2'],
+                controls: ['cc7.2'],
+                fileType: 'pdf',
+                tenant: 'acme-corp'
+            },
+            {
+                id: 3,
+                title: 'Vulnerability Scan - January',
+                description: 'Monthly vulnerability scan results',
+                date: '2025-01-05',
+                status: 'needs-review',
+                frameworks: ['iso27001'],
+                controls: ['a12.4.1'],
+                fileType: 'pdf',
+                tenant: 'techstart-inc'
+            }
+        ];
+
+        let currentTenant = 'acme-corp';
+        let currentRole = 'Admin';
+        let currentView = 'dashboard';
+        let selectedEvidenceId = null;
+
+        // Initialize
+        function init() {
+            setupEventListeners();
+            render();
+        }
+
+        function setupEventListeners() {
+            // Navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    currentView = e.target.dataset.view;
+                    render();
+                });
+            });
+
+            // Tenant/Role selects
+            document.getElementById('tenantSelect').addEventListener('change', (e) => {
+                currentTenant = e.target.value;
+                render();
+            });
+
+            document.getElementById('roleSelect').addEventListener('change', (e) => {
+                currentRole = e.target.value;
+                render();
+            });
+
+            // Upload modal
+            document.getElementById('uploadBtn').addEventListener('click', () => {
+                if (currentRole !== 'Auditor') {
+                    document.getElementById('uploadModal').classList.add('active');
+                    document.getElementById('evidenceDate').value = new Date().toISOString().split('T')[0];
+                }
+            });
+
+            document.getElementById('closeUploadModal').addEventListener('click', closeUploadModal);
+            document.getElementById('cancelUpload').addEventListener('click', closeUploadModal);
+            document.getElementById('submitUpload').addEventListener('click', handleUpload);
+
+            // Tag modal
+            document.getElementById('closeTagModal').addEventListener('click', closeTagModal);
+            document.getElementById('cancelTag').addEventListener('click', closeTagModal);
+            document.getElementById('submitTag').addEventListener('click', handleTagUpdate);
+
+            // Filters
+            document.getElementById('filterFramework').addEventListener('change', render);
+            document.getElementById('filterStatus').addEventListener('change', render);
+
+            // Export
+            document.getElementById('exportFramework').addEventListener('change', updateExportPreview);
+            document.getElementById('exportStatus').addEventListener('change', updateExportPreview);
+            document.getElementById('exportBtn').addEventListener('click', handleExport);
+        }
+
+        function render() {
+            // Update active nav
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.toggle('active', item.dataset.view === currentView);
+            });
+
+            // Hide all views
+            document.querySelectorAll('.view-content').forEach(view => {
+                view.classList.add('hidden');
+            });
+
+            // Show current view
+            document.getElementById(currentView + 'View').classList.remove('hidden');
+
+            // Update upload button visibility
+            const uploadBtn = document.getElementById('uploadBtn');
+            if (uploadBtn) {
+                uploadBtn.style.display = currentRole === 'Auditor' ? 'none' : 'inline-flex';
+            }
+
+            // Render view content
+            switch(currentView) {
+                case 'dashboard':
+                    renderDashboard();
+                    break;
+                case 'evidence':
+                    renderEvidence();
+                    break;
+                case 'frameworks':
+                    renderFrameworks();
+                    break;
+                case 'export':
+                    renderExport();
+                    break;
+            }
+        }
+
+        function getTenantEvidence() {
+            return evidence.filter(e => e.tenant === currentTenant);
+        }
+
+        function getFilteredEvidence() {
+            const tenantEvidence = getTenantEvidence();
+            const framework = document.getElementById('filterFramework')?.value || 'all';
+            const status = document.getElementById('filterStatus')?.value || 'all';
+
+            return tenantEvidence.filter(e => {
+                if (framework !== 'all' && !e.frameworks.includes(framework)) return false;
+                if (status !== 'all' && e.status !== status) return false;
+                return true;
+            });
+        }
+
+        function renderDashboard() {
+            const tenantEvidence = getTenantEvidence();
+            
+            // Update title
+            document.getElementById('dashboardTitle').textContent = `Dashboard - ${TENANTS[currentTenant]}`;
+
+            // Update stats
+            const stats = {
+                total: tenantEvidence.length,
+                complete: tenantEvidence.filter(e => e.status === 'complete').length,
+                pending: tenantEvidence.filter(e => e.status === 'pending').length,
+                needsReview: tenantEvidence.filter(e => e.status === 'needs-review').length
+            };
+
+            document.getElementById('statTotal').textContent = stats.total;
+            document.getElementById('statComplete').textContent = stats.complete;
+            document.getElementById('statPending').textContent = stats.pending;
+            document.getElementById('statNeedsReview').textContent = stats.needsReview;
+
+            // Render recent evidence
+            const recentList = document.getElementById('recentEvidenceList');
+            recentList.innerHTML = tenantEvidence.slice(0, 5).map(e => `
+                <div class="evidence-item">
+                    <div class="evidence-info">
+                        <div class="evidence-title">${e.title}</div>
+                        <div class="evidence-meta">${e.date} • ${e.fileType.toUpperCase()}</div>
+                    </div>
+                    <span class="badge badge-${e.status.replace('-', '')}">${e.status.replace('-', ' ')}</span>
+                </div>
+            `).join('');
+        }
+
+        function renderEvidence() {
+            const filtered = getFilteredEvidence();
+            const list = document.getElementById('evidenceList');
+            
+            list.innerHTML = filtered.map(e => `
+                <div class="evidence-item">
+                    <div class="evidence-info">
+                        <div class="evidence-title">${e.title}</div>
+                        <div class="evidence-meta">${e.description} • ${e.date} • ${e.fileType.toUpperCase()}</div>
+                        <div class="evidence-tags">
+                            ${e.frameworks.map(f => `<span class="tag tag-framework">${FRAMEWORKS[f].name}</span>`).join('')}
+                            ${e.controls.map(c => `<span class="tag tag-control">${c}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="btn-actions">
+                        <span class="badge badge-${e.status.replace('-', '')}">${e.status.replace('-', ' ')}</span>
+                        ${currentRole !== 'Auditor' ? `<button class="btn btn-secondary btn-small" onclick="openTagModal(${e.id})">🏷️ Edit Tags</button>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderFrameworks() {
+            const list = document.getElementById('frameworkList');
+            const tenantEvidence = getTenantEvidence();
+            
+            list.innerHTML = Object.values(FRAMEWORKS).map(f => {
+                const controls = CONTROLS[f.id] || [];
+                const coveredControls = new Set();
+                tenantEvidence.forEach(e => {
+                    if (e.frameworks.includes(f.id)) {
+                        e.controls.forEach(c => coveredControls.add(c));
+                    }
+                });
+                const coverage = controls.length > 0 ? Math.round((coveredControls.size / controls.length) * 100) : 0;
+
+                return `
+                    <div class="framework-item">
+                        <div class="framework-name">${f.name}</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${coverage}%"></div>
+                        </div>
+                        <div class="progress-text">
+                            ${coveredControls.size} of ${controls.length} controls covered (${coverage}%)
+                        </div>
+                        <div style="margin-top: 0.75rem; font-size: 0.75rem; color: #64748b;">
+                            ${controls.map(c => `
+                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
+                                    ${coveredControls.has(c.id) ? '✓' : '○'} ${c.name}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderExport() {
+            updateExportPreview();
+        }
+
+        function updateExportPreview() {
+            const framework = document.getElementById('exportFramework').value;
+            const status = document.getElementById('exportStatus').value;
+            const tenantEvidence = getTenantEvidence();
+            
+            const filtered = tenantEvidence.filter(e => {
+                if (framework !== 'all' && !e.frameworks.includes(framework)) return false;
+                if (status === 'complete' && e.status !== 'complete') return false;
+                return true;
+            });
+
+            // Update summary
+            let summaryHTML = `${filtered.length} evidence items will be exported<br>`;
+            if (framework !== 'all') {
+                summaryHTML += `Framework: ${FRAMEWORKS[framework].name}<br>`;
+            }
+            summaryHTML += `Format: Organized ZIP archive with folders by control`;
+            document.getElementById('exportSummary').innerHTML = summaryHTML;
+
+            // Update preview list
+            const list = document.getElementById('exportPreviewList');
+            list.innerHTML = filtered.map(e => `
+                <div class="evidence-item">
+                    <div class="evidence-info">
+                        <div class="evidence-title">${e.title}</div>
+                        <div class="evidence-meta">${e.description}</div>
+                        <div class="evidence-tags">
+                            ${e.controls.map(c => `<span class="tag tag-control">${c}</span>`).join('')}
+                        </div>
+                    </div>
+                    <span class="badge badge-${e.status.replace('-', '')}">${e.status.replace('-', ' ')}</span>
+                </div>
+            `).join('');
+        }
+
+        function openTagModal(evidenceId) {
+            selectedEvidenceId = evidenceId;
+            const e = evidence.find(ev => ev.id === evidenceId);
+            
+            // Show evidence info
+            document.getElementById('tagEvidenceInfo').innerHTML = `
+                <div style="font-weight: 600;">${e.title}</div>
+                <div style="font-size: 0.875rem; color: #64748b; margin-top: 0.25rem;">${e.description}</div>
+            `;
+
+            // Set status
+            document.getElementById('tagEvidenceStatus').value = e.status;
+
+            // Render framework checkboxes
+            const frameworkHtml = Object.values(FRAMEWORKS).map(f => `
+                <div class="checkbox-group">
+                    <input type="checkbox" id="fw_${f.id}" ${e.frameworks.includes(f.id) ? 'checked' : ''}>
+                    <label for="fw_${f.id}">${f.name}</label>
+                </div>
+            `).join('');
+            document.getElementById('frameworkCheckboxes').innerHTML = frameworkHtml;
+
+            // Add listeners to framework checkboxes to update controls
+            Object.values(FRAMEWORKS).forEach(f => {
+                document.getElementById(`fw_${f.id}`).addEventListener('change', updateControlCheckboxes);
+            });
+
+            updateControlCheckboxes();
+            document.getElementById('tagModal').classList.add('active');
+        }
+
+        function updateControlCheckboxes() {
+            const e = evidence.find(ev => ev.id === selectedEvidenceId);
+            const selectedFrameworks = Object.values(FRAMEWORKS)
+                .filter(f => document.getElementById(`fw_${f.id}`).checked)
+                .map(f => f.id);
+
+            let controlsHtml = '';
+            selectedFrameworks.forEach(fwId => {
+                const controls = CONTROLS[fwId] || [];
+                if (controls.length > 0) {
+                    controlsHtml += `
+                        <div style="margin-top: 0.75rem;">
+                            <div style="font-size: 0.75rem; font-weight: 600; color: #64748b; margin-bottom: 0.5rem;">
+                                ${FRAMEWORKS[fwId].name}
+                            </div>
+                            ${controls.map(c => `
+                                <div class="checkbox-group" style="margin-left: 1rem;">
+                                    <input type="checkbox" id="ctrl_${c.id}" ${e.controls.includes(c.id) ? 'checked' : ''}>
+                                    <label for="ctrl_${c.id}" style="font-size: 0.875rem;">${c.name}</label>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+            });
+
+            document.getElementById('controlCheckboxes').innerHTML = controlsHtml || '<p style="color: #94a3b8; font-size: 0.875rem;">Select frameworks to see controls</p>';
+        }
+
+        function handleTagUpdate() {
+            const e = evidence.find(ev => ev.id === selectedEvidenceId);
+            
+            // Update frameworks
+            e.frameworks = Object.values(FRAMEWORKS)
+                .filter(f => document.getElementById(`fw_${f.id}`)?.checked)
+                .map(f => f.id);
+
+            // Update controls
+            const allControls = Object.values(CONTROLS).flat();
+            e.controls = allControls
+                .filter(c => document.getElementById(`ctrl_${c.id}`)?.checked)
+                .map(c => c.id);
+
+            // Update status
+            e.status = document.getElementById('tagEvidenceStatus').value;
+
+            closeTagModal();
+            render();
+        }
+
+        function closeUploadModal() {
+            document.getElementById('uploadModal').classList.remove('active');
+            document.getElementById('evidenceTitle').value = '';
+            document.getElementById('evidenceDescription').value = '';
+            document.getElementById('evidenceStatus').value = 'pending';
+        }
+
+        function closeTagModal() {
+            document.getElementById('tagModal').classList.remove('active');
+            selectedEvidenceId = null;
+        }
+
+        function handleUpload() {
+            const title = document.getElementById('evidenceTitle').value;
+            if (!title) {
+                alert('Please enter a title');
+                return;
+            }
+
+            const newEvidence = {
+                id: Date.now(),
+                title: title,
+                description: document.getElementById('evidenceDescription').value,
+                date: document.getElementById('evidenceDate').value,
+                status: document.getElementById('evidenceStatus').value,
+                frameworks: [],
+                controls: [],
+                fileType: 'pdf',
+                tenant: currentTenant
+            };
+
+            evidence.push(newEvidence);
+            closeUploadModal();
+            render();
+        }
+
+        function handleExport() {
+            const framework = document.getElementById('exportFramework').value;
+            const status = document.getElementById('exportStatus').value;
+            const tenantEvidence = getTenantEvidence();
+            
+            const filtered = tenantEvidence.filter(e => {
+                if (framework !== 'all' && !e.frameworks.includes(framework)) return false;
+                if (status === 'complete' && e.status !== 'complete') return false;
+                return true;
+            });
+
+            const exportData = filtered.map(e => ({
+                title: e.title,
+                description: e.description,
+                date: e.date,
+                status: e.status,
+                frameworks: e.frameworks.map(f => FRAMEWORKS[f].name).join(', '),
+                controls: e.controls.join(', ')
+            }));
+
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `audit_evidence_${currentTenant}_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Start the app
+        init();
+    </script>
+</body>
+</html>
